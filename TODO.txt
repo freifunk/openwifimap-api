@@ -1,0 +1,5 @@
+
+ * prevent design documents from being replicated
+   ( --> filtered replication?)
+ * document api :)
+ * include sample doc
