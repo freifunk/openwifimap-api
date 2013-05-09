@@ -27,6 +27,12 @@ function (newDoc, oldDoc, userCtx, secObj) {
     return date;
   }
 
+  /*
+  if (newDoc._deleted) {
+    return;
+  }
+  */
+
   required('type');
 
   if (newDoc.type == 'node') {
