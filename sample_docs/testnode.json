@@ -4,7 +4,5 @@
   "hostname": "testnode",
   "longitude": 52.1,
   "latitude": 13.1,
-  "updateInterval": 1000,
-  "ctime": "2013-05-04T12:47:52.948Z",
-  "mtime": "2013-05-04T12:47:52.948Z"
+  "updateInterval": 1000
 }

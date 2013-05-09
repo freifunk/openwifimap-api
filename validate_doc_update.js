@@ -71,6 +71,10 @@ function (newDoc, oldDoc, userCtx, secObj) {
     if (mtime < ctime) {
       throw({forbidden: 'mtime < ctime not allowed'});
     }
+  } else if (newDoc.type == 'node_stats') {
+    required('time');
+    isDate('time');
+    required('node_id');
   } else {
     throw({forbidden: 'unrecognized type: ' + newDoc.type});
   }
