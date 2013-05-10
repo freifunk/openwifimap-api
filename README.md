@@ -8,11 +8,10 @@ openwifimap is licensed under the [MIT license](http://opensource.org/licenses/M
 # API
 The design document in ```owm-api``` defines an HTTP API and all URLs below are relative to this API URL, e.g. ```http://couch.myhost.com/openwifimap/_design/owm-api/```.
 
-## Pushing data into the database
+## Document types
 ### node documents
-Each node's data **must be updated at least once a day**. If a node is not updated for several days it is considered to be offline and may be removed from the database.
-
-New nodes and node updates have to be pushed via a HTTP POST or PUT request to ```_update/node/INSERTID``` where ```INSERTID``` has to match the ```_id``` field in the node document. A node document has a few required fields which are documented here:
+#### Required fields
+The following fields are always present in a ```node``` document:
 ```javascript
 {
   "_id": "a4d15a897f851938a799e548cc000eb0",      // required by CouchDB: document id
@@ -20,40 +19,15 @@ New nodes and node updates have to be pushed via a HTTP POST or PUT request to `
   "hostname": "myhostname",             // hostname == display name
   "latitude": 52.520791,                // latitude in degrees, range [-180,180], EPSG:3857
   "longitude": 13.40951,                // longitude in degrees, range [-90,90], EPSG:3857
-  "updateInterval": 6000                // time between consecutive updates in seconds
+  "updateInterval": 6000,               // time between consecutive updates in seconds
+  "ctime": "2013-05-09T17:49:21.821Z",  // create time (automatically inserted by update handler, see below)
+  "mtime": "2013-05-10T17:50:22.123Z"   // modify time (automatically inserted by update handler, see below)
 }
 ```
-
-
-### node_stats documents
-
-## Querying the database
-### TODO
-
-## Useful links
-* Openwrt Packages: https://github.com/freifunk/packages-pberg/tree/master/utils/luci-app-owm
-* Linux shell script: https://github.com/freifunk/ff-control/blob/master/scripts/dns-bonjour-geo-map.sh
-
-
-### Required fields
-We all love documentation by example, so here is one. There are a few required fields in a node document. This is a node document that would result in an icon on the map:
-```javascript
-{
-  "_id": "a4d15a897f851938a799e548cc000eb0",      // required by CouchDB: document id
-  "_rev": "22-95f616b25babe186cef05c744657b894",  // required by CouchDB: revision of document
-  "type": "node",                       // required: tells couchDB that this is a node
-  "hostname": "myhostname",             // required: hostname == display name
-  "longitude": 13.40951,                // required: longitude in degrees, range [-90,90], EPSG:3857
-  "latitude": 52.520791,                // required: latitude in degrees, range [-180,180], EPSG:3857
-  "lastupdate": "2013-01-12T12:30:12Z"  // required: timestamp of last update in UTC
-  "updateInterval": 600,                // required: in seconds
-}
-```
-
-### Optional fields
+#### Optional fields
 While nothing is wrong with only pushing the required fields, you probably want to provide further information about the node. There are several fields that are recognized by the openwifimap couchapp, while you can add *any* other information about your node. Just make sure that you provide valid JSON and use the recognized fields correctly.
 
-#### Neighbors
+##### Neighbors
 The `neighbors` field's value should be a list of neighbor nodes. Links between neighbors will be shown as lines in the map. The quality field is required for each field.
 ```javascript
   "neighbors": [
@@ -91,7 +65,7 @@ You can provide additional fields in neighbor objects, for example the used rout
   ]
 ```
 
-#### Network interfaces and antennas
+##### Network interfaces and antennas
 Each node can have several network interfaces. Provide as many details as possible to improve the presentation of the node in the map and on the detail page of OpenWiFiMap.
 ```javascript
   "interfaces": [
@@ -251,7 +225,7 @@ Each node can have several network interfaces. Provide as many details as possib
   ]
 ```
 
-#### Postal address
+##### Postal address
 ```javascript
   "postalAddress": {
     "name": "Café Kotti",
@@ -262,7 +236,7 @@ Each node can have several network interfaces. Provide as many details as possib
   }
 ```
 
-#### Firmware
+##### Firmware
 ```javascript
   "firmware": {
     "name": "openwrt",
@@ -272,7 +246,7 @@ Each node can have several network interfaces. Provide as many details as possib
   }
 ```
 
-#### Hardware
+##### Hardware
 ```javascript
   "hardware": {
     "manufacturer": "Ubiquiti",
@@ -282,7 +256,7 @@ Each node can have several network interfaces. Provide as many details as possib
   }
 ```
 
-#### Other fields
+##### Other fields
 ```javascript
   "created": "2013-01-06T01:33:52Z",    // timestamp of creation in UTC
   "height": 15.5,                       // height in meters above ground level
@@ -304,3 +278,28 @@ Each node can have several network interfaces. Provide as many details as possib
     }
   }
 ```
+
+
+### node_stats documents
+Dynamic data (such as statistics) can be stored in ```node_stats``` documents.  There are only these required fields:
+```javascript
+{
+  "type": "node_stats",
+  "node_id": "a4d15a897f851938a799e548cc000eb0"
+}
+```
+## Pushing data into the database
+### node documents
+Each node's data **must be updated at least once a day**. If a node is not updated for several days it is considered to be offline and may be removed from the database.
+
+New nodes and node updates have to be pushed via a HTTP POST or PUT request to ```_update/node/INSERTID``` where ```INSERTID``` has to match the ```_id``` field in the node document. A node document has a few required fields (see above): ```_id```, ```type```, ```hostname```, ```latitude```, ```longitude``` and ```updateInterval```. The ```ctime``` and ```mtime``` are set automatically by the update handler.
+
+### node_stats documents
+
+
+## Querying the database
+### TODO
+
+## Useful links
+* Openwrt Packages: https://github.com/freifunk/packages-pberg/tree/master/utils/luci-app-owm
+* Linux shell script: https://github.com/freifunk/ff-control/blob/master/scripts/dns-bonjour-geo-map.sh
