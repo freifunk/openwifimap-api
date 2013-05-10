@@ -1,0 +1,9 @@
+{
+  "_id": "testnode2",
+  "type": "node",
+  "hostname": "testnode2",
+  "longitude": 12.8,
+  "latitude": 51.9,
+  "updateInterval": 1000,
+  "links": [ {"id": "testnode1"} ]
+}

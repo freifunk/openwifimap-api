@@ -1,8 +1,0 @@
-{
-  "_id": "testnode",
-  "type": "node",
-  "hostname": "testnode",
-  "longitude": 52.1,
-  "latitude": 13.1,
-  "updateInterval": 1000
-}
