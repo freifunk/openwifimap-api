@@ -1,29 +1,38 @@
 # openwifimap
 
-A map for free network WiFi routers (freifunk and perhaps others, too!). Visit the instance running at [openwifimap.net](http://openwifimap.net). If you want to include the map in your website, consider using the standalone map at [openwifimap.net/map.html](http://openwifimap.net/map.html) (e.g. in an iframe).
-
-# Installation
-
-openwifimap is a [couchapp](http://couchapp.org/page/index) and thus relies on [CouchDB](http://couchdb.apache.org/). Beside CouchDB, the only dependency is the spatial extension [GeoCouch](https://github.com/couchbase/geocouch/) (which is available in popular CouchDB instances such as [Iris Couch](http://www.iriscouch.com/)). To deploy openwifimap you have to clone the repository and carry out these steps:
-
-* **Step 1:** `couchapp push http://user:passwd@your-couchdb:port/openwifimap`
-* **Step 2:** there is no step 2 (remember: this is a couchapp)! Visit your site at `http://your-couchdb:port/openwifimap/_design/openwifimap/index.html`
-
-To make URLs nicer you can use CouchDB URL rewrites. If your CouchDB is accessed via the hostname `myhost.net` you have to insert the following section into your CouchDB configuration:
-* section: `vhosts`
-* option: `myhost.net`
-* value: `/openwifimap/_design/openwifimap/_rewrite`
+A map for free network WiFi routers (freifunk and others, too!). Visit the [demo site](http://freifunk.github.io/openwifimap-html5) or the instance running at [openwifimap.net](http://openwifimap.net). If you want to include the map in your website, consider using the standalone map at [openwifimap.net/map.html](http://openwifimap.net/map.html) (e.g. in an iframe).
 
 # License
 openwifimap is licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
-# Developers corner
+# API
+The design document in ```owm-api``` defines an HTTP API and all URLs below are relative to this API URL, e.g. ```http://couch.myhost.com/openwifimap/_design/owm-api```
+## Pushing data to the database
+### node documents
+Each node's data **must be updated at least once a day**. If a node is not updated for several days it is considered to be offline and may be removed from the database.
+
+
+```javascript
+{
+  "_id": "a4d15a897f851938a799e548cc000eb0",      // required by CouchDB: document id
+  "type": "node",                       // tells couchDB that this is a node
+  "hostname": "myhostname",             // hostname == display name
+  "latitude": 52.520791,                // latitude in degrees, range [-180,180], EPSG:3857
+  "longitude": 13.40951,                // longitude in degrees, range [-90,90], EPSG:3857
+  "updateInterval": 6000                // time between consecutive updates in seconds
+}
+```
+
+
+### node_stats documents
+
+## Querying the database
+### TODO
+
 ## Useful links
 * Openwrt Packages: https://github.com/freifunk/packages-pberg/tree/master/utils/luci-app-owm
 * Linux shell script: https://github.com/freifunk/ff-control/blob/master/scripts/dns-bonjour-geo-map.sh
 
-## Documentation of node documents
-Each node's data **must be updated at least once a day**. If a node is not updated for several days it is considered to be offline and removed from the map. 
 
 ### Required fields
 We all love documentation by example, so here is one. There are a few required fields in a node document. This is a node document that would result in an icon on the map:
