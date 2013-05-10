@@ -1,6 +1,6 @@
 # openwifimap
 
-A map for free network WiFi routers (freifunk and others, too!). Visit the [demo site](http://freifunk.github.io/openwifimap-html5) or the instance running at [openwifimap.net](http://openwifimap.net). If you want to include the map in your website, consider using the standalone map at [openwifimap.net/map.html](http://openwifimap.net/map.html) (e.g. in an iframe).
+A map for free network WiFi routers (freifunk and others, too!). Visit the [demo site](http://freifunk.github.io/openwifimap-html5/map.html) or the instance running at [openwifimap.net](http://openwifimap.net). If you want to include the map in your website, consider using the standalone map at [openwifimap.net/map.html](http://openwifimap.net/map.html) (e.g. in an iframe).
 
 # License
 openwifimap is licensed under the [MIT license](http://opensource.org/licenses/MIT).
