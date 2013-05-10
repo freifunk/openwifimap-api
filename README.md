@@ -6,12 +6,13 @@ A map for free network WiFi routers (freifunk and others, too!). Visit the [demo
 openwifimap is licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
 # API
-The design document in ```owm-api``` defines an HTTP API and all URLs below are relative to this API URL, e.g. ```http://couch.myhost.com/openwifimap/_design/owm-api```
-## Pushing data to the database
+The design document in ```owm-api``` defines an HTTP API and all URLs below are relative to this API URL, e.g. ```http://couch.myhost.com/openwifimap/_design/owm-api/```.
+
+## Pushing data into the database
 ### node documents
 Each node's data **must be updated at least once a day**. If a node is not updated for several days it is considered to be offline and may be removed from the database.
 
-
+New nodes and node updates have to be pushed via a HTTP POST or PUT request to ```_update/node/INSERTID``` where ```INSERTID``` has to match the ```_id``` field in the node document. A node document has a few required fields which are documented here:
 ```javascript
 {
   "_id": "a4d15a897f851938a799e548cc000eb0",      // required by CouchDB: document id
