@@ -27,10 +27,10 @@ The following fields are always present in a ```node``` document:
 #### Optional fields
 While nothing is wrong with only pushing the required fields, you probably want to provide further information about the node. There are several fields that are recognized by the openwifimap couchapp, while you can add *any* other information about your node. Just make sure that you provide valid JSON and use the recognized fields correctly.
 
-##### Neighbors
-The `neighbors` field's value should be a list of neighbor nodes. Links between neighbors will be shown as lines in the map. The quality field is required for each field.
+##### Links
+The `links` field's value should be a list of links to neighbor nodes. Links between neighbors will be shown as lines in the map. The quality field is required for each field.
 ```javascript
-  "neighbors": [
+  "links": [
     {
       "id": "a4d15a897f851938a799e548cc0017e7",  // document id of the neighbor node
       "quality": 1                               // quality of the link, range [0,1], 0==no link, 1==perfect link
@@ -41,9 +41,9 @@ The `neighbors` field's value should be a list of neighbor nodes. Links between 
     }
   ]
 ```
-You can provide additional fields in neighbor objects, for example the used routing protocol and its data in a mesh network (such as [OLSR](http://en.wikipedia.org/wiki/Optimized_Link_State_Routing_Protocol) or [B.A.T.M.A.N.](http://de.wikipedia.org/wiki/B.A.T.M.A.N.) in [freifunk](http://en.wikipedia.org/wiki/Freifunk) networks):
+You can provide additional fields in link objects, for example the used routing protocol and its data in a mesh network (such as [OLSR](http://en.wikipedia.org/wiki/Optimized_Link_State_Routing_Protocol) or [B.A.T.M.A.N.](http://de.wikipedia.org/wiki/B.A.T.M.A.N.) in [freifunk](http://en.wikipedia.org/wiki/Freifunk) networks):
 ```javascript
-  "neighbors": [
+  "links": [
     {
       "id": "host2",
       "quality": 0.39016,                 // for olsr, 1/etx can be used (be aware of dividing by zero)
