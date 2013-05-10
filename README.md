@@ -10,7 +10,7 @@ The design document in ```owm-api``` defines an HTTP API and all URLs below are 
 
 ## Document types
 ### node documents
-#### Required fields
+#### Standard fields
 The following fields are always present in a ```node``` document:
 ```javascript
 {
@@ -281,13 +281,17 @@ Each node can have several network interfaces. Provide as many details as possib
 
 
 ### node_stats documents
-Dynamic data (such as statistics) can be stored in ```node_stats``` documents.  There are only these required fields:
+Dynamic data (such as statistics) can be stored in ```node_stats``` documents.  There are only these standard fields:
 ```javascript
 {
-  "type": "node_stats",
-  "node_id": "a4d15a897f851938a799e548cc000eb0"
+  "_id": "e201d78aed2deee6982b4c07d6232abf",     // required by CouchDB: document id
+  "type": "node_stats",                          // tells couchDB that this is a node_stats doc
+  "node_id": "a4d15a897f851938a799e548cc000eb0", // id of the node this node_stats doc belongs to
+  "time": "2013-05-10T17:58:34.829Z"             // time (automatically inserted by update handler, see below)
 }
 ```
+
+
 ## Pushing data into the database
 ### node documents
 Each node's data **must be updated at least once a day**. If a node is not updated for several days it is considered to be offline and may be removed from the database.
@@ -295,7 +299,9 @@ Each node's data **must be updated at least once a day**. If a node is not updat
 New nodes and node updates have to be pushed via a HTTP POST or PUT request to ```_update/node/INSERTID``` where ```INSERTID``` has to match the ```_id``` field in the node document. A node document has a few required fields (see above): ```_id```, ```type```, ```hostname```, ```latitude```, ```longitude``` and ```updateInterval```. The ```ctime``` and ```mtime``` are set automatically by the update handler.
 
 ### node_stats documents
+A ```node_stats``` document only has two required fields: ```type``` and ```node_id```.
 
+```node_stats``` docs have to be pushed via a HTTP POST or PUT request to ```_update/node_stats/```. The ```time``` field is set automatically.
 
 ## Querying the database
 ### TODO
