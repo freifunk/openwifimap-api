@@ -27,11 +27,17 @@ function (newDoc, oldDoc, userCtx, secObj) {
     return date;
   }
 
-  /*
-  if (newDoc._deleted) {
-    return;
+  function user_is(role) {
+    return userCtx.roles.indexOf(role) >= 0;
   }
-  */
+
+  if (newDoc._deleted) {
+    if (user_is('_admin')) {
+      return;
+    } else {
+      throw({forbidden: 'Only admins are allowed to delete docs.'});
+    }
+  }
 
   required('type');
 
