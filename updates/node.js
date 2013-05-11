@@ -7,6 +7,9 @@ function (doc, req) {
     newdoc._id = doc._id;
     newdoc._rev = doc._rev;
   }
+  if (!newdoc._id && req.id) {
+    newdoc._id = req.id;
+  }
 
   var date = (new Date()).toISOString();
   newdoc.ctime = doc ? doc.ctime : date;
