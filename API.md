@@ -56,3 +56,39 @@ and you will see something like this:
 ```
 {"count":2}
 ```
+
+### By map tile scheme
+
+Obtaining a rough estimate of the number of nodes in a few areas of the current viewport is often enough. That's why there's a view that tells you how many nodes are placed in the area that a single map tile covers. Therefore the [Slippy map tilenames](http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) scheme is used. A tile is defined by 3 numbers: zoom (between 0 and 18), x and y (see the documentation in the OSM wiki). You can query a whole bunch of tiles at once like this:
+```
+curl -X POST APIURL/view_nodes_coarse -d '{"keys":[[4,8,5],[4,8,6],[4,8,7]]}'
+```
+which results in
+```
+{"rows":[
+{"key":[4,8,5],"value":2}
+]}
+```
+This means that 2 nodes are in the tile with zoom=4, x=8 and y=5. The other tiles are empty.
+
+### Essential information by id
+If you know a node's id you can query the "essential" information about this node (here the id is ```derrida.olsr```:
+```
+curl -X POST APIURL/view_nodes -d '{"keys":["derrida.olsr"]}'
+```
+The result is
+```
+{"id":"derrida.olsr","key":"derrida.olsr","value":{"hostname":"derrida","ctime":"2013-05-26T16:22:54.978Z","mtime":"2013-06-27T04:03:05.001Z","id":"derrida.olsr","latlng":[52.489507900268002061,13.375780725937000071]}}
+]}
+```
+Multiple nodes can be queried by providing multiple keys.
+
+### All information by id
+The full JSON document of a node can be retrieved by
+```
+curl APIURL/db/derrida.olsr
+```
+where ```derrida.olsr``` is the id. This results in
+```
+{"_id":"derrida.olsr","_rev":"1-e31d8fc2bf6224dd0b763c649d9a7293", ... }
+```
