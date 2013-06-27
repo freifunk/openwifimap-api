@@ -32,7 +32,7 @@ A ```node_stats``` document only has two required fields: ```type``` and ```node
 
 Let's get all nodes in a specific part of the earth that is defined by a bounding box. For example, all nodes in Berlin can be fetched with
 ```
-curl "http://api.openwifimap.net/view_nodes_spatial?bbox=13.08,52.45,13.71,52.57"
+curl "APIURL/view_nodes_spatial?bbox=13.08,52.45,13.71,52.57"
 ```
 which results in something like this:
 ```
@@ -50,7 +50,7 @@ which results in something like this:
 
 However, sometimes there may be a lot of nodes in an area (imagine you zoomed out such that the full globe is visible). Then you first want to know how many nodes reside in a specific bounding box. Just add ```count=true```:
 ```
-curl "http://api.openwifimap.net/view_nodes_spatial?bbox=13.08,52.45,13.71,52.57&count=true"
+curl "APIURL/view_nodes_spatial?bbox=13.08,52.45,13.71,52.57&count=true"
 ```
 and you will see something like this:
 ```
