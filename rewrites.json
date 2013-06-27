@@ -1,7 +1,7 @@
 [
     {
-        "from": "update_node",
-        "to": "_update/node"
+        "from": "update_node/*",
+        "to": "_update/node/*"
     },
     {
         "from": "view_nodes_spatial",
