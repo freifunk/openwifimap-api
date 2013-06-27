@@ -1,4 +1,4 @@
-# The API
+# The openwifimap API
 
 The openwifimap design document exposes an HTTP API for manipulating and querying the stored data. First you need to know the ```APIURL```. For the main openwifimap installation the ```APIURL``` is ```http://api.openwifimap.net/```. If you have your own installation and pushed the design document to ```http://myhost/mydb``` then the ```APIURL``` is ```http://myhost/mydb/_design/owm-api/_rewrite/``` (you can use a [CouchDB vhost](https://wiki.apache.org/couchdb/Virtual_Hosts) to obtain a nicer URL).
 
@@ -10,7 +10,7 @@ New nodes and node updates have to be pushed via a HTTP POST or PUT request to `
 
 The following example shows how to push a node with the id ```myid``` with curl:
 ```
-curl -X POST http://myhost/mydb/_design/owm-api/_update/node/myid -d '{ 
+curl -X POST APIURL/update_node/myid -d '{ 
   "type": "node",
   "hostname": "myhostname",
   "latitude": 52.520791,
