@@ -1,0 +1,27 @@
+[
+    {
+        "from": "update_node",
+        "to": "_update/node"
+    },
+    {
+        "from": "view_nodes_spatial",
+        "to": "_spatial/nodes"
+    },
+    {
+        "from": "view_nodes_coarse",
+        "to": "_view/nodes_coarse",
+        "query": {"group": "true"}
+    },
+    {
+        "from": "view_nodes",
+        "to": "_view/nodes"
+    },
+    {
+        "from": "db/*",
+        "to": "../../*"
+    },
+    {
+        "from": "*",
+        "to": "*"
+    }
+]
