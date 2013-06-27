@@ -6,7 +6,7 @@ A map for free network WiFi routers (freifunk and others, too!). Visit the [demo
 openwifimap is licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
 # API
-The design document in ```owm-api``` defines an HTTP API and all URLs below are relative to this API URL, e.g. ```http://couch.myhost.com/openwifimap/_design/owm-api/```.
+See [openwifimap API](API.md).
 
 ## Document types
 ### node documents
