@@ -232,6 +232,14 @@ Each node can have several network interfaces. Provide as many details as possib
   ]
 ```
 
+##### Community
+```javascript
+  "community": {
+    "name": "Freifunk Berlin",
+    "url": "http://berlin.freifunk.net/"
+  }
+```
+
 ##### Postal address
 ```javascript
   "postalAddress": {
@@ -265,7 +273,6 @@ Each node can have several network interfaces. Provide as many details as possib
 
 ##### Other fields
 ```javascript
-  "created": "2013-01-06T01:33:52Z",    // timestamp of creation in UTC
   "height": 15.5,                       // height in meters above ground level
   "indoor": true,                       // is this node placed indoors?
   "ipv4defaultGateway": "104.201.0.33",
