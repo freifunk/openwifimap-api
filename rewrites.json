@@ -17,6 +17,10 @@
         "to": "_view/nodes"
     },
     {
+        "from": "view_nodes_by_mtime",
+        "to": "_view/nodes_by_mtime"
+    },
+    {
         "from": "db",
         "to": "../../"
     },
