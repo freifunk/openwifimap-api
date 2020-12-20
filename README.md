@@ -2,12 +2,13 @@
 
 OpenWiFiMap is a database and map for free network WiFi routers (freifunk and others, too!). 
 
-This is the database part of the openwifimap. Make sure to also take a look at the [openwifimap HTML5 app](https://github.com/freifunk/openwifimap-html5) running at [openwifimap.net](http://openwifimap.net).
+This is the database part of the openwifimap. Make sure to also take a look at the [openwifimap HTML5 app](https://github.com/freifunk/openwifimap-html5).
 
 # API installations
 This is a (possibly incomplete) list of API installations:
-* [api.openwifimap.net](http://api.openwifimap.net)
-* [couch.pberg.freifunk.net/test/_design/owm-api/_rewrite](http://couch.pberg.freifunk.net/test/_design/owm-api/_rewrite/)
+
+Currently there are no working installations.
+See https://github.com/freifunk/openwifimap-api/issues/9 for a bit of background
 
 # License
 openwifimap is licensed under the [MIT license](http://opensource.org/licenses/MIT).
