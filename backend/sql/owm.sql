@@ -5,6 +5,7 @@ CREATE TABLE nodes (
     hostname VARCHAR NOT NULL,
     lat double precision NOT NULL,
     lng double precision NOT NULL,
+    links VARCHAR NOT NULL,
     ctime TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
     mtime TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
 );

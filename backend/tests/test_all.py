@@ -15,8 +15,7 @@ async def test_all(
         "hostname": "test_node",
         "latitude": 52.520791,
         "longitude": 13.40951,
-        "ctime": "2013-05-09T17:49:21.821Z",
-        "mtime": "2013-05-10T17:50:22.123Z"
+        "links": [{"id": "other_node.olsr", "quality": 1}]
     }
     resp = await test_app.put("/update_node/test_node.olsr", json=data)
     assert resp.status_code == 200
@@ -29,6 +28,7 @@ async def test_all(
     resp = await test_app.get("/view_nodes_spatial?bbox=12.9,52.27,14.12,52.7")
     assert resp.status_code == 200
     assert len(resp.json()["rows"]) == 1
+    assert len(resp.json()["rows"][0]["value"]["links"]) == 1
 
     LOG.info("**** Testing view_nodes_spatial, count only")
     resp = await test_app.get("/view_nodes_spatial?bbox=12.9,52.27,14.12,52.7&count=true")

@@ -4,7 +4,7 @@ import logging
 import math
 import os
 import re
-import urllib
+import urllib.parse
 from typing import List
 
 import asyncpg
@@ -57,7 +57,10 @@ async def update_node(
         r_json["ctime"] = datetime.utcnow().isoformat() + "Z"
     r_json["mtime"] = datetime.utcnow().isoformat() + "Z"
 
-    await upsert_node_in_db(node_id, r_json["hostname"], r_json.get("latitude", None), r_json.get("longitude", None), r_json["ctime"], r_json["mtime"], pool)
+    await upsert_node_in_db(node_id, r_json["hostname"],
+                            r_json.get("latitude", None), r_json.get("longitude", None),
+                            build_node_link_list_short(r_json),
+                            r_json["ctime"], r_json["mtime"], pool)
 
     with open(f"{f_path}.new", "w") as json_file:
         data_s = json.dumps(r_json, indent=4)
@@ -93,7 +96,7 @@ async def view_nodes_spatial(
             datetime.utcnow() - timedelta(days=7),
             timeout=DB_TIMEOUT
         )
-        data = {"rows": [await get_node_data_from_node_row(node) for node in nodes]}
+        data = {"rows": [get_node_data_from_node_row(node) for node in nodes]}
         return JSONResponse(status_code=200, content=data)
     else:
         node_count = await pool.fetchval(
@@ -145,12 +148,12 @@ async def view_nodes(
             node_id,
             timeout=DB_TIMEOUT
         )
-        node_data = await get_node_data_from_node_row(node)
+        node_data = get_node_data_from_node_row(node)
         data.append(node_data)
     return JSONResponse(status_code=200, content=data)
 
 
-async def get_node_data_from_node_row(node):
+def get_node_data_from_node_row(node):
     node_data = {
         "id": node["id"],
         "key": node["id"],
@@ -159,6 +162,7 @@ async def get_node_data_from_node_row(node):
             "ctime": node["ctime"].isoformat() + "Z",
             "mtime": node["mtime"].isoformat() + "Z",
             "id": node["id"],
+            "links": json.loads(node["links"]),
             "latlng": [node["lat"], node["lng"]]
         }
     }
@@ -246,7 +250,9 @@ async def sync_db_from_disk(
                     q_total_nodes += 1
                     if n_lat is not None and n_lng is not None:
                         q_nodes_with_latlng += 1
-                    await upsert_node_in_db(r_json["id"], r_json["hostname"], n_lat, n_lng, r_json["ctime"], r_json["mtime"], connection)
+                    await upsert_node_in_db(r_json["id"], r_json["hostname"], n_lat, n_lng,
+                                            build_node_link_list_short(r_json),
+                                            r_json["ctime"], r_json["mtime"], connection)
                 except Exception as e:
                     LOG.exception(f"Exception reading {node_file}")
                     errors.append({"node_file": node_file, "Exception": str(e)})
@@ -260,21 +266,22 @@ def safe_file_name_from_node_id(node_id: str) -> str:
     return urllib.parse.quote_plus(node_id).replace(".", "%2E")
 
 
-async def upsert_node_in_db(node_id: str, hostname: str, lat: float, lng: float, c_time: str, m_time: str, pool):
+async def upsert_node_in_db(node_id: str, hostname: str, lat: float, lng: float, links, c_time: str, m_time: str, pool):
     c_time_dt = dateutil.parser.parse(c_time[:-1])
     m_time_dt = dateutil.parser.parse(m_time[:-1])
     if lat is not None and lng is not None:
         assert await pool.execute(
             """
-            INSERT INTO nodes (id, lat, lng, hostname, ctime, mtime)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO nodes (id, lat, lng, hostname, links, ctime, mtime)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             ON CONFLICT (id) DO
-            UPDATE SET lat = $2, lng = $3, hostname = $4, ctime = $5, mtime = $6;
+            UPDATE SET lat = $2, lng = $3, hostname = $4, links = $5, ctime = $6, mtime = $7;
             """,
             node_id,
             lat,
             lng,
             hostname,
+            json.dumps(links),
             c_time_dt,
             m_time_dt,
             timeout=DB_TIMEOUT
@@ -287,3 +294,11 @@ async def upsert_node_in_db(node_id: str, hostname: str, lat: float, lng: float,
             """,
             node_id
         )
+
+
+def build_node_link_list_short(r_json):
+    links = []
+    for link in r_json.get("links", []):
+        if "id" in link and "quality" in link:
+            links.append({"id": link["id"], "quality": link["quality"]})
+    return links
