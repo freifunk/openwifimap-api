@@ -133,7 +133,11 @@ class ViewNodeResponseData(BaseModel):
     value: ViewNodeInfoData
 
 
-@router.post("/view_nodes", response_model=List[ViewNodeResponseData], status_code=200)
+class ViewNodesResponseData(BaseModel):
+    rows: List[ViewNodeResponseData]
+
+
+@router.post("/view_nodes", response_model=ViewNodesResponseData, status_code=200)
 async def view_nodes(
         view_nodes_data: ViewNodesRequestData,
         pool: Pool = Depends(pool)
@@ -150,7 +154,7 @@ async def view_nodes(
         )
         node_data = get_node_data_from_node_row(node)
         data.append(node_data)
-    return JSONResponse(status_code=200, content=data)
+    return JSONResponse(status_code=200, content={"rows": data})
 
 
 def get_node_data_from_node_row(node):

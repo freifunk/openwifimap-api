@@ -38,7 +38,7 @@ async def test_all(
     LOG.info("**** Testing view_nodes")
     resp = await test_app.post("/view_nodes", json={"keys": ["test_node.olsr"]})
     assert resp.status_code == 200
-    assert resp.json()[0]["id"] == "test_node.olsr"
+    assert resp.json()["rows"][0]["id"] == "test_node.olsr"
 
     LOG.info("**** Testing view_nodes_coarse")
     resp = await test_app.post("/view_nodes_coarse", json={"keys": [[8, 137, 83]]})
