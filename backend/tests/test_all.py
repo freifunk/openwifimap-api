@@ -41,9 +41,9 @@ async def test_all(
     assert resp.json()[0]["id"] == "test_node.olsr"
 
     LOG.info("**** Testing view_nodes_coarse")
-    resp = await test_app.post("/view_nodes_coarse", json={"keys": [[5,40,50]]})
+    resp = await test_app.post("/view_nodes_coarse", json={"keys": [[8, 137, 83]]})
     assert resp.status_code == 200
-    assert len(resp.json()["rows"]) == 0
+    assert len(resp.json()["rows"]) == 1
 
     LOG.info("**** Testing getting detailed node info")
     resp = await test_app.get("/db/test_node.olsr")

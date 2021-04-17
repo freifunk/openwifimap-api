@@ -203,11 +203,11 @@ async def view_nodes_coarse(
         node_count = await pool.fetchval(
             """
             SELECT count(id) FROM nodes
-            WHERE lng >= $1 AND lat >= $2 AND lng <= $3 AND lat <= $4 AND mtime > $5
+            WHERE lng >= $1 AND lng <= $2 AND lat >= $3 AND lat <= $4 AND mtime > $5
             """,
             nw[1],
-            se[0],
             se[1],
+            se[0],
             nw[0],
             datetime.utcnow() - timedelta(days=7),
             timeout=DB_TIMEOUT
