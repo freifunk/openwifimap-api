@@ -33,7 +33,7 @@ def create_app():
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["https://openwifimap.net", "http://localhost:3000"], allow_headers=["*"], allow_methods=["*"]
+        allow_origins=["https://map.weimarnetz.de", "https://openwifimap.net", "http://localhost:3000"], allow_headers=["*"], allow_methods=["*"]
     )
 
     app.add_event_handler('startup', startup)

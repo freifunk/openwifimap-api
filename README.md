@@ -15,6 +15,29 @@ The somewhat more verbose old API doc can be found in the [old API.md](https://g
 # License
 openwifimap is licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
+# Operations
+
+## Requirements
+
+- PostgreSQL 11
+- Python >= 3.6
+
+## Install
+
+* database
+    * create a database user `owmuser`
+    * create a database `owmdb`
+    * connect to your postgres as superuser, e.g. by `sudo su - postgres` and execute `psql`
+        * connect with your db: `\c owmdb`
+        * create cube extension: `create extension cube;`
+        * create earthdistance extension: `create extension earthdistance`
+* service
+    * change to the backend directory and install dependencies: `pip3 install -r requirements.txt`
+    * create the directory `/var/opt/ffmapdata`
+    * run the service: `python3 -m backend.main`
+
+things to come: a systemd file
+
 # Development info
 The backend is basically keeping a list of JSON documents on disk which can get queried and updated via a web API.
 The database is used as search index only.
