@@ -152,8 +152,9 @@ async def view_nodes(
             node_id,
             timeout=DB_TIMEOUT
         )
-        node_data = get_node_data_from_node_row(node)
-        data.append(node_data)
+        if node is not None:
+            node_data = get_node_data_from_node_row(node)
+            data.append(node_data)
     return JSONResponse(status_code=200, content={"rows": data})
 
 

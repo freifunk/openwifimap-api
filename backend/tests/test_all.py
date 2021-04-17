@@ -36,7 +36,7 @@ async def test_all(
     assert resp.json()["count"] == 1
 
     LOG.info("**** Testing view_nodes")
-    resp = await test_app.post("/view_nodes", json={"keys": ["test_node.olsr"]})
+    resp = await test_app.post("/view_nodes", json={"keys": ["test_node.olsr", "unknown.olsr"]})
     assert resp.status_code == 200
     assert resp.json()["rows"][0]["id"] == "test_node.olsr"
 
