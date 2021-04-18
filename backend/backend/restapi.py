@@ -219,18 +219,16 @@ async def get_all_nodes(
 ):
     all_nodes = []
     async with pool.acquire() as connection:
-        async with connection.transaction():
-            await connection.execute("TRUNCATE nodes")
-            node_files = glob.glob(f"{NODE_DATA_DIR}/*.json")
-            for node_file in node_files:
-                try:
-                    with open(node_file, 'r') as json_file:
-                        data = json_file.read()
-                        r_json = json.loads(data)
-                    all_nodes.append({"doc": r_json})
-                except Exception as e:
-                    LOG.exception(f"Exception reading {node_file}")
-                    errors.append({"node_file": node_file, "Exception": str(e)})
+       node_files = glob.glob(f"{NODE_DATA_DIR}/*.json")
+       for node_file in node_files:
+           try:
+               with open(node_file, 'r') as json_file:
+                   data = json_file.read()
+                   r_json = json.loads(data)
+               all_nodes.append({"doc": r_json})
+           except Exception as e:
+               LOG.exception(f"Exception reading {node_file}")
+               errors.append({"node_file": node_file, "Exception": str(e)})
     return JSONResponse(status_code=200, content={"rows": all_nodes})
 
 @router.get("/db/{node_id}", status_code=200)
@@ -282,6 +280,7 @@ async def upsert_node_in_db(node_id: str, hostname: str, lat: float, lng: float,
     c_time_dt = dateutil.parser.parse(c_time[:-1])
     m_time_dt = dateutil.parser.parse(m_time[:-1])
     if lat is not None and lng is not None:
+        LOG.warn(f"I'm going to insert something for node {node_id}")
         assert await pool.execute(
             """
             INSERT INTO nodes (id, lat, lng, hostname, ctime, mtime)
@@ -298,6 +297,7 @@ async def upsert_node_in_db(node_id: str, hostname: str, lat: float, lng: float,
             timeout=DB_TIMEOUT
         ) == "INSERT 0 1"
     else:
+        LOG.warn(f"I'm going to delete something for node {node_id}")
         await pool.execute(
             """
             DELETE FROM nodes
