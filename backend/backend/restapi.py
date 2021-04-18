@@ -280,7 +280,6 @@ async def upsert_node_in_db(node_id: str, hostname: str, lat: float, lng: float,
     c_time_dt = dateutil.parser.parse(c_time[:-1])
     m_time_dt = dateutil.parser.parse(m_time[:-1])
     if lat is not None and lng is not None:
-        LOG.warn(f"I'm going to insert something for node {node_id}")
         assert await pool.execute(
             """
             INSERT INTO nodes (id, lat, lng, hostname, ctime, mtime)
@@ -297,7 +296,6 @@ async def upsert_node_in_db(node_id: str, hostname: str, lat: float, lng: float,
             timeout=DB_TIMEOUT
         ) == "INSERT 0 1"
     else:
-        LOG.warn(f"I'm going to delete something for node {node_id}")
         await pool.execute(
             """
             DELETE FROM nodes
