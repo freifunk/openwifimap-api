@@ -36,7 +36,13 @@ openwifimap is licensed under the [MIT license](http://opensource.org/licenses/M
     * create the directory `/var/opt/ffmapdata`
     * run the service: `python3 -m backend.main`
 
-things to come: a systemd file
+## Running with systemd
+
+* Download [archive](https://github.com/freifunk/openwifimap-api/archive/refs/heads/master.zip), store and extract it (e.g. to `/opt/openwifimap-api`)
+* Create a python virtual environment by running `python3 -m venv /path/to/openwifimap-venv`. Now you have the python binaries in `/path/to/openwifimap-venv/bin`
+* Go to the directory with the extracted archive, change to the backend folder and install requirements by running `/path/to/openwifimap-venv/bin/pip3 install -r requirements.txt`
+* Copy the included systemd file to `/etc/systemd/system/` and set the path to your venv binaries in `/path/to/openwifimap-venv/bin`
+* Copy the systemd config file to `/etc/default/openwifimap-api` and configure the password for your database user
 
 # Development info
 The backend is basically keeping a list of JSON documents on disk which can get queried and updated via a web API.
