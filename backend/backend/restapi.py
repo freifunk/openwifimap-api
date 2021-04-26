@@ -218,6 +218,7 @@ async def get_all_nodes(
         pool: Pool = Depends(pool)
 ):
     all_nodes = []
+    errors = []
     async with pool.acquire() as connection:
        node_files = glob.glob(f"{NODE_DATA_DIR}/*.json")
        for node_file in node_files:
@@ -225,11 +226,14 @@ async def get_all_nodes(
                with open(node_file, 'r') as json_file:
                    data = json_file.read()
                    r_json = json.loads(data)
-               all_nodes.append({"doc": r_json})
+               if "id" in r_json:
+                   all_nodes.append({"doc": r_json})
+               else:
+                   LOG.exception(f"No id found in file {node_file}")
            except Exception as e:
                LOG.exception(f"Exception reading {node_file}")
                errors.append({"node_file": node_file, "Exception": str(e)})
-    return JSONResponse(status_code=200, content={"rows": all_nodes})
+    return JSONResponse(status_code=200, content={"rows": all_nodes, "errors": errors})
 
 @router.get("/db/{node_id}", status_code=200)
 async def get_node_by_id(
