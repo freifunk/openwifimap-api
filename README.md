@@ -15,6 +15,35 @@ The somewhat more verbose old API doc can be found in the [old API.md](https://g
 # License
 openwifimap is licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
+# Operations
+
+## Requirements
+
+- PostgreSQL 11
+- Python >= 3.6
+
+## Install
+
+* database
+    * create a database user `owmuser`
+    * create a database `owmdb`
+    * connect to your postgres as superuser, e.g. by `sudo su - postgres` and execute `psql`
+        * connect with your db: `\c owmdb`
+        * create cube extension: `create extension cube;`
+        * create earthdistance extension: `create extension earthdistance`
+* service
+    * change to the backend directory and install dependencies: `pip3 install -r requirements.txt`
+    * create the directory `/var/opt/ffmapdata`
+    * run the service: `python3 -m backend.main`
+
+## Running with systemd
+
+* Download [archive](https://github.com/freifunk/openwifimap-api/archive/refs/heads/master.zip), store and extract it (e.g. to `/opt/openwifimap-api`)
+* Create a python virtual environment by running `python3 -m venv /path/to/openwifimap-venv`. Now you have the python binaries in `/path/to/openwifimap-venv/bin`
+* Go to the directory with the extracted archive, change to the backend folder and install requirements by running `/path/to/openwifimap-venv/bin/pip3 install -r requirements.txt`
+* Copy the included systemd file to `/etc/systemd/system/` and set the path to your venv binaries in `/path/to/openwifimap-venv/bin`
+* Copy the systemd config file to `/etc/default/openwifimap-api` and configure the password for your database user
+
 # Development info
 The backend is basically keeping a list of JSON documents on disk which can get queried and updated via a web API.
 The database is used as search index only.

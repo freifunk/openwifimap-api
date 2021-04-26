@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenWifiMap Backend
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/default/openwifimap-api
+Type=simple
+User=www-data
+WorkingDirectory=/opt/openwifimap-api/backend
+ExecStart=</path/to/venv>/bin/python3 -m backend.main
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

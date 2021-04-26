@@ -222,6 +222,27 @@ async def view_nodes_coarse(
 
     return JSONResponse(status_code=200, content={"rows": data})
 
+@router.get("/db/_all_docs", status_code=200)
+async def get_all_nodes(
+        pool: Pool = Depends(pool)
+):
+    all_nodes = []
+    errors = []
+    async with pool.acquire() as connection:
+       node_files = glob.glob(f"{NODE_DATA_DIR}/*.json")
+       for node_file in node_files:
+           try:
+               with open(node_file, 'r') as json_file:
+                   data = json_file.read()
+                   r_json = json.loads(data)
+               if "id" in r_json:
+                   all_nodes.append({"doc": r_json})
+               else:
+                   LOG.exception(f"No id found in file {node_file}")
+           except Exception as e:
+               LOG.exception(f"Exception reading {node_file}")
+               errors.append({"node_file": node_file, "Exception": str(e)})
+    return JSONResponse(status_code=200, content={"rows": all_nodes, "errors": errors})
 
 @router.get("/db/{node_id}", status_code=200)
 async def get_node_by_id(
@@ -229,7 +250,6 @@ async def get_node_by_id(
 ):
     f_path = f"{NODE_DATA_DIR}/{safe_file_name_from_node_id(node_id)}.json"
     return FileResponse(f_path)
-
 
 @router.post("/sync_db_from_disk", status_code=200)
 async def sync_db_from_disk(
