@@ -99,7 +99,12 @@
  :put "inside func arrayToJson";
  :local jsonmsg
  :foreach k,v in=$1 do={
-  :set jsonmsg ($jsonmsg."\"$k\":\"$v\",")
+  :if ("str" = [:typeof $v]) do={
+   :set jsonmsg ($jsonmsg."\"$k\":\"$v\",")
+  }
+  :if ("num" = [:typeof $v]) do={
+   :set jsonmsg ($jsonmsg."\"$k\":$v,")
+  }
  }
  # remove tailing ","
  :set jsonmsg [:pick $jsonmsg 0 ([:len $jsonmsg]-1)];
