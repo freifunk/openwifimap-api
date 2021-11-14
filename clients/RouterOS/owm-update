@@ -169,7 +169,7 @@
 :local load [$calcDecimalPointFunc [/system/resource/get cpu-load] 1000];
 #:put [/system/resource/get cpu-load];
 
-:local jsonstatic { "type"="node"; "script"="RouterOS-owm"; "api_rev"="1.0" };
+:local jsonstatic { "type"="node"; "script"="RouterOS-owm"; "api_rev"="1.0"; "updateInterval"=3600 };
 #:local jsonrequired { "latitude"="52.4378"; "longitude"="13.551016"; "hostname"="Verklaerung-mesh-Nord" };
 #:local jsonhost { "hostname"="Verklaerung-mesh-Nord" };
 :local jsonhost { "hostname"=[/system/identity/get name] };
