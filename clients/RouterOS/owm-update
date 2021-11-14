@@ -1,0 +1,219 @@
+#:global owmid ""
+:global owmapi "https://util.berlin.freifunk.net"
+:global locationjson "\"latitude\":52.4378,\"longitude\":13.551016"
+
+# taken from https://forum.mikrotik.com/viewtopic.php?t=11439
+:local calcDecimalPointFunc do={
+
+         # dividend / divisor = quotient.decimal = result
+
+         :local dividend $1
+         :local divisor $2
+         :local decimalplaces 3
+
+
+         # Math Calculation here
+         :local quotient 0
+         :local remainder 0
+         :local result 0
+         :local decimal 0
+
+         :set quotient ($dividend / $divisor)
+
+         :if ($quotient = 0) do={
+                   :set dividend [:tonum ($dividend . "0")]
+         }
+
+         :set remainder ($dividend - ($divisor * $quotient))
+
+         :log info $remainder
+
+         :if ($remainder > 0) do={
+                   :local tmpremainder [:tonum ($remainder . "0")]
+                   :for x from=1 to=$decimalplaces do={
+                             :local tmpdecimal [:tonum ($tmpremainder / $divisor)]
+                             :set decimal [:tonum ($decimal . $tmpdecimal)]
+                             :set tmpremainder [:tonum (($tmpremainder - ($tmpdecimal * $divisor)) . "0")]
+                   }
+                   :local decimalTens 1
+                   :local leadingZeros
+                   :for y from=1 to=($decimalplaces -1) do={
+                             :set decimalTens ($decimalTens * 10)
+                             :if ($decimal < $decimalTens) do={
+                                       :set leadingZeros ($leadingZeros . "0")
+                             }
+                   }
+
+
+:set result ($quotient . "." . $leadingZeros . $decimal)
+
+                   :log info $decimal
+
+         } else={
+                   :set result $quotient
+         }
+         # END Math Calculation here
+
+         :return $result
+
+}
+
+# https://forum.mikrotik.com/viewtopic.php?t=81402
+# Get uptime in seconds
+:global UptimeSeconds 0;
+:global uptime [/system resource get uptime];
+:global weekend 0;
+:global dayend 0;
+:global weeks 0;
+:global days 0;
+
+:if ([:find $uptime "w" -1] > 0) do={
+    :set weekend [:find $uptime "w" -1];
+    :set weeks [:pick $uptime 0 $weekend];
+    :set weekend ($weekend+1);
+};
+
+:if ([:find $uptime "d" -1] > 0) do={
+    :set dayend [:find $uptime "d" -1];
+    :set days [:pick $uptime $weekend $dayend];
+};
+
+:global time [:pick $uptime ([:len $uptime]-8) [:len $uptime]]; 
+
+:global hours [:pick $time 0 2];
+:global minutes [:pick $time 3 5];
+:global seconds [:pick $time 6 8]; 
+
+:set UptimeSeconds [($weeks*86400*7+$days*86400+$hours*3600+$minutes*60+$seconds)];
+
+######################################
+
+:global jsonPrint do={
+ :put "inside func JSON-print";
+ :put (" type of arg is ".[:typeof $1]);
+ :put (" len of arg is ".[:len $1]);
+ if ([:typeof $1] = "array") do [:foreach k,v in=$1 do={:put ("  $k has $v")}];
+}
+
+:global arrayToJson do={
+ :put "inside func arrayToJson";
+ :local jsonmsg
+ :foreach k,v in=$1 do={
+  :set jsonmsg ($jsonmsg."\"$k\":\"$v\",")
+ }
+ # remove tailing ","
+ :set jsonmsg [:pick $jsonmsg 0 ([:len $jsonmsg]-1)];
+ :put (" encoded JSON: ".$jsonmsg);
+ :return $jsonmsg;
+}
+
+:global jsonDumpFull do={
+ :local jsonmsg
+ :global locationjson
+# :put "inside func JSON-dump";
+ if ([:typeof $1] = "array") do [
+#  :foreach k,v in=$1 do={:set jsonmsg ($jsonmsg."\\\"$k\\\":\\\"$v\\\",")}
+  :foreach k,v in=$1 do={:set jsonmsg ($jsonmsg."\"$k\":\"$v\",")}
+ ];
+# :set jsonmsg ($jsonmsg."\"hardware\":\"xxx\"");
+# :put $jsonmsg;
+:put $locationjson;
+ :return "{$jsonmsg$locationjson}";
+}
+
+:global appendLocation do={
+ :put "inside func appendLocation";
+ :global locationjson
+ :local jsonmsg
+# # remove tailing "}"
+# :set jsonmsg [:pick $1 0 ([:len $1]-1)];
+# :put $jsonmsg;
+# :set jsonmsg "$jsonmsg,$locationjson";
+# :put $jsonmsg;
+# :return $jsonmsg;
+ :return $locationjson;
+}
+
+:global jsonDump do={
+ :global arrayToJson
+ :local jsonmsg
+ :put "inside func JSON-dump";
+ if ([:typeof $1] = "array") do [
+  :set jsonmsg [$arrayToJson $1];
+ ];
+ :put $jsonmsg;
+ :return "$jsonmsg";
+}
+
+:global jsonAddNode do={
+ :global arrayToJson
+ :local jsonmsg
+ :put "inside func jsonAddNode";
+ :put $2;
+ if ([:typeof $2] = "array") do [
+  :set jsonmsg [$arrayToJson $2];
+ ];
+ :put $jsonmsg;
+ :return "\"$1\":{$jsonmsg}";
+}
+
+
+
+:local hardware ([/system/resource/get platform] ." ". [/system/resource/get board-name]);
+:local firmware { "name"="RouterOS"; "revision"=[/system/resource/get version] };
+:local load [$calcDecimalPointFunc [/system/resource/get cpu-load] 1000];
+#:put [/system/resource/get cpu-load];
+
+:local jsonstatic { "type"="node"; "script"="RouterOS-owm"; "api_rev"="1.0" };
+#:local jsonrequired { "latitude"="52.4378"; "longitude"="13.551016"; "hostname"="Verklaerung-mesh-Nord" };
+#:local jsonhost { "hostname"="Verklaerung-mesh-Nord" };
+:local jsonhost { "hostname"=[/system/identity/get name] };
+:local jsonhardware { "hardware"=$hardware };
+#:local jsonfirmware { [$jsonDump ($firmware)] };
+#:put $jsonstatic;
+
+
+#:put "JSON-print:";
+#:foreach k,v in=$jsonstatic do={:put (" $k has $v")};
+:local json ($jsonstatic, $jsonhost, $jsonhardware);
+#:put $hardware;
+#:put $json;
+#:put "JSON-print:";
+#:foreach k,v in=$json do={:put (" $k has $v")};
+#:foreach k,v in=$json do={:put ("\"$k\":\"$v\"")};
+#:put "building JSON message";
+#:local jsonmsg;
+#:foreach k,v in=$json do={:set jsonmsg ($jsonmsg."\"$k\":\"$v\",")};
+#:put $jsonmsg
+
+#:put [:typeof { "type"="node" }];
+#$jsonPrint ({ "type"="node" });
+
+#$jsonPrint ($jsonstatic);
+#$jsonPrint ($json);
+#$jsonDump  ($json);
+
+#:put [$arrayToJson ($firmware)];
+
+:put "with return";
+#:put [$jsonDump ($json)];
+:set json [$jsonDump ($json)];
+:put $json;
+:local node [$jsonAddNode "firmware" $firmware];
+:put $node;
+:set json "$json,$node";
+:put $json;
+:put [$appendLocation ($json)];
+:set json "$json,$locationjson";
+:set json "$json,\"system\":{\"loadavg\":[$load], \"uptime\":[$UptimeSeconds]}";
+#:set json "$json,\"system\":{\"loadavg\":[$load], \"uptime\":[$UptimeSeconds], \"sysinfo\":[\"dropped\",\"dummy\"]}";
+:put $json;
+
+:local url "$owmapi/update_node"
+:if ([:typeof $owmid] = "nothing") do={
+ :set url ("$url/".[/system/identity/get name].".olsr")
+} else={
+ :set url "$url/$owmid"
+};
+
+/tool/fetch http-method=put mode=http http-header-field="Content-Type: application/json" output=none url=$url http-data="{$json}"
