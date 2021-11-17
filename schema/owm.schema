@@ -1,0 +1,302 @@
+{
+    "$id": "https://apt.openwifimap.net/schema/owm.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "type": "object",
+    "examples": [
+        {
+            "schemarevision": 1,
+            "script": {
+                "name": "python",
+                "version": "1.0"
+            },
+            "id": "1",
+            "Node": "ref: https://netjson.org/rfc.html#name-deviceconfiguration",
+            "hardware": "ref: https://github.com/netjson/netjson/issues/62",
+            "location": {
+                "ref": "https://github.com/netjson/netjson/issues/62",
+                "type": "Point",
+                "coordinates": [
+                    13.7457753718,
+                    43.2589744573
+                ]
+            },
+            "contact": {
+                "name": "Freifunk",
+                "email": "info@freifunk.net",
+                "url": "http://www.mabb.de"
+            },
+            "community": {
+                "name": "Freifunk Musterhausen",
+                "url": "http://www.musterfunk.local"
+            },
+            "customdata": {
+                "id": "any JSON onbject"
+            }
+        }
+    ],
+    "required": [
+        "schemarevision",
+        "script",
+        "id",
+        "Node",
+        "location"
+    ],
+    "properties": {
+        "schemarevision": {
+            "$id": "#/properties/schemarevision",
+            "type": "integer",
+            "title": "The schemarevision schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                1
+            ]
+        },
+        "script": {
+            "$id": "#/properties/script",
+            "type": "object",
+            "title": "tool which created the dataset",
+            "description": "unique identification of the script used to generate the dataset.",
+            "examples": [
+                {
+                    "name": "python",
+                    "version": "1.0"
+                }
+            ],
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "$id": "#/properties/script/properties/scriptname",
+                    "type": "string",
+                    "title": "The name schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "examples": [
+                        "python"
+                    ]
+                },
+                "version": {
+                    "$id": "#/properties/script/properties/scriptversion",
+                    "type": "string",
+                    "title": "The version schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "1.0"
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "id": {
+            "$id": "#/properties/id",
+            "description": "An unique ID of the Node. MAYBE an UUID",
+            "maxItems": 1,
+            "minItems": 1,
+            "minLength": 10,
+            "readOnly": true,
+            "title": "The id schema",
+            "type": "string"
+        },
+        "Node": {
+            "$id": "#/properties/Node",
+            "type": "object"
+            "$schema": "https://netjson.org/rfc.html#name-deviceconfiguration",
+            "title": "A NETJson General-object (https://netjson.org/rfc.html#name-general-object)",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                "ref: https://netjson.org/rfc.html#name-deviceconfiguration"
+            ],
+        },
+        "hardware": {
+            "$schema": "https://github.com/netjson/netjson/raw/02771e225ea00cc7b7766da7ca890c982f8abbf0/schema/device-configuration.json/hardware",
+            "type": "object"
+            "title": "a NETJson Hardware-object (https://netjson.org/rfc.html#name-hardware-object)",
+            "description": "https://netjson.org/rfc.html#name-hardware-object",
+            "examples": [
+                "ref: https://github.com/netjson/netjson/issues/62"
+            ],
+        },
+        "location": {
+            "$id": "#/properties/location",
+            "$schema": "https://geojson.org/",
+            "type": "object",
+            "title": "The location schema as GeoJSON (https://github.com/netjson/netjson/issues/62)",
+            "required": [
+                "type",
+                "coordinates"
+            ],
+            "maxItems": 1,
+            "minItems": 1,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "title": "The type schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "examples": [
+                        "Point"
+                    ]
+                },
+                "coordinates": {
+                    "type": "array",
+                    "title": "The coordinates schema",
+                    "examples": [
+                        [
+                            13.7457753718,
+                            43.2589744573
+                        ]
+                    ],
+                    "additionalItems": true,
+                    "items": {
+                        "$id": "#/properties/location/properties/coordinates/items",
+                        "anyOf": [
+                            {
+                                "$id": "#/properties/location/properties/coordinates/items/anyOf/0",
+                                "type": "number",
+                                "title": "The first anyOf schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": 0.0,
+                                "examples": [
+                                    13.7457753718,
+                                    43.2589744573
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "additionalProperties": true
+        },
+        "contact": {
+            "$id": "#/properties/contact",
+            "type": "object",
+            "title": "The contact schema",
+            "default": {},
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                {
+                    "name": "Freifunk",
+                    "email": "info@freifunk.net",
+                    "url": "http://www.mabb.de"
+                }
+            ],
+            "properties": {
+                "name": {
+                    "$id": "#/properties/contact/properties/name",
+                    "type": "string",
+                    "title": "The name schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "Freifunk"
+                    ]
+                },
+                "email": {
+                    "$id": "#/properties/contact/properties/email",
+                    "type": "string",
+                    "title": "The email schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "info@freifunk.net"
+                    ]
+                },
+                "url": {
+                    "$id": "#/properties/contact/properties/url",
+                    "default": "",
+                    "description": "An explanation about the purpose of this instance.",
+                    "examples": [
+                        "http://www.mabb.de"
+                    ],
+                    "title": "The url schema",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true
+        },
+        "community": {
+            "$id": "#/properties/community",
+            "type": "object",
+            "title": "The community schema",
+            "default": {},
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                {
+                    "name": "Freifunk Musterhausen",
+                    "url": "http://www.musterfunk.local"
+                }
+            ],
+            "properties": {
+                "name": {
+                    "$id": "#/properties/community/properties/name",
+                    "type": "string",
+                    "title": "The name schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "Freifunk Musterhausen"
+                    ]
+                },
+                "url": {
+                    "$id": "#/properties/community/properties/url",
+                    "type": "string",
+                    "title": "The url schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": "",
+                    "examples": [
+                        "http://www.musterfunk.local"
+                    ]
+                }
+            },
+            "additionalProperties": true
+        },
+        "customdata": {
+            "$id": "#/properties/customdata",
+            "description": "An explanation about the purpose of this instance.",
+            "examples": [
+                [
+                    {
+                        "id": "any JSON onbject"
+                    }
+                ]
+            ],
+            "title": "The customdata schema",
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "$id": "#/properties/customdata/items",
+                "description": "each dataset needs an uniqe ID for easy lookup and prevent unintended cahnge. Can be a domain-sepcific UUID.",
+                "title": "unique id",
+                "type": "object",
+                "anyOf": [
+                    {
+                        "default": {},
+                        "description": "An explanation about the purpose of this instance.",
+                        "examples": [
+                            {
+                                "id": "any JSON onbject"
+                            }
+                        ],
+                        "required": [
+                            "id"
+                        ],
+                        "title": "The first anyOf schema",
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "description": "contains the payload of the data to store",
+                                "title": "The id schema",
+                                "type": "object"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": true
+}

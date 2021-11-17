@@ -1,0 +1,45 @@
+{"type":"OpenWifiMapDataset",
+ "general":{
+  "schemaversion":1,"api_rev":"1.0",
+  "type":"node","updateInterval":3600,
+  "script":"RouterOS-owm"
+ },
+ "location":{
+  "geometry": {"type": "Point",
+   "coordinates": [13.551099300384521,52.437863163422385]
+  }
+ },
+ "NetJSON-data":[
+  {"type":"DeviceConfiguration","general":{"hostname":"Mesh-Nord"},
+   "interfaces":[
+    {"name":"wifi1","type":"wireless"},
+    {"name":"br-dhcp", "type":"bridge",
+     "addresses":[
+      {"address":"127.0.0.1","mask":8,"proto":"static","family":"ipv4"},
+      {"address":"fd79:24c5:af7f:16::1","mask":64,"proto":"static","family":"ipv6"}
+     ]
+    },
+    {"name":"ffuplink","type":"ethernet",
+     "addresses":[{"proto":"dhcp","family":"ipv4"},{"proto":"dhcp","family":"ipv6"}]
+    }
+   ]
+  },
+  {"type":"DeviceMonitoring","general":{"hostname":"Mesh-Nord"},
+   "interfaces":[
+    {"name":"wifi1","type":"wireless"},
+    {"name":"ffuplink","uptime":5237,"statistics":
+     {"rx_bytes": 9287737,"tx_bytes": 9287737,"is_up":true}
+    }
+   ]
+  }
+ ],
+ "community":{
+  "name":"Freifunk",
+  "url":["http:www.freifunk.net", "http://berlin.freifunk.net"]
+ },
+ "customdata":[
+  {"community_berlin":{"base64_blob":"gstzsjtztzkzjstjshrstj5jzj6_"}},
+  {"community_potsdam":{"alt_monitor":"http://freifunk-potsdam.de/monitoring-new/hostname","property2":true}},
+  {"b652ee48-473f-11ec-81d3-0242ac130003":"<node-specific encrypted data of the operator>"}
+ ]
+}
